@@ -38,3 +38,14 @@ class Load_Image:
             QMessageBox.critical(parent_widget, "Error", f"Failed to load images:\n{str(e)}")
             print(e)
     
+    def get_load_images_folder(self):
+        """
+        Get the folder path of the images to be loaded
+
+        Returns:
+            str: The folder path of the images to be loaded
+        """
+        if self._load_images_folder is None:
+            return None
+        
+        return self._load_images_folder
