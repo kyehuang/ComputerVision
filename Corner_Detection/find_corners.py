@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (
     QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox
 )
 
-class Corner_Detection:
+class Find_Corners:
     def __init__(self,):
         self.chessboard_size = (11, 8)
         self.winSize = (11, 11)
@@ -28,7 +28,7 @@ class Corner_Detection:
         if _load_images_folder is None:
             QMessageBox.warning(parent_widget, "Warning", "No folder selected.")
             return
-        images = self.get_image_from_folder(_load_images_folder)
+        images = self.__get_image_from_folder(_load_images_folder)
         
         # Get the images from the folder path
         if images is None:
@@ -37,7 +37,7 @@ class Corner_Detection:
         
         # Find the chess board corners
         for image in images:
-            image_with_corners, corners = self.find_corner(image)
+            image_with_corners, corners = self.__find_corner(image)
             if image_with_corners is not None:
                 cv2.imshow("Chess Board Corners", image_with_corners)
                 cv2.waitKey(0)
@@ -46,7 +46,7 @@ class Corner_Detection:
                 return
         cv2.destroyAllWindows()
     
-    def find_corner(self, image):
+    def __find_corner(self, image):
         """
         Find the chess board corners
 
@@ -68,7 +68,7 @@ class Corner_Detection:
         else:
             return None, None
         
-    def get_image_from_folder(self, folder_path):
+    def __get_image_from_folder(self, folder_path):
         """
         Get the image from the folder path
 

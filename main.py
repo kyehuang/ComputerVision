@@ -8,14 +8,14 @@ from PyQt5.QtWidgets import (
 import os
 
 from Load_Image.load_image import Load_Image
-from Corner_Detection.corner_detection import Corner_Detection
+from Corner_Detection.find_corners import Find_Corners
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.load_image = Load_Image()
-        self.corner_detection = Corner_Detection()
+        self.find_corners = Find_Corners()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -183,7 +183,8 @@ class MainWindow(QWidget):
 
     def handle_find_corner(self):
         """处理查找角点的逻辑"""
-        self.corner_detection.find_corners(self, self.load_image.get_load_images_folder())
+        self.find_corners.find_corners(self, self.load_image.get_load_images_folder())
+
     def handle_find_extrinsic(self):
         """根据用户选择的索引，显示对应的外参矩阵"""
         if self.rvecs is not None and self.tvecs is not None:
