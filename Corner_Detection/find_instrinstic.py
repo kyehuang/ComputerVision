@@ -7,6 +7,10 @@ import cv2
 
 class Find_instrintic:
     def __init__(self):
+        self.intrinsic_matrix = None
+        self.distortion_coefficients = None
+        self.rvec = None
+        self.tvec = None
         pass
 
     def find_intrinsic(self, parent_widget:QWidget, object_points_list:np.ndarray, corners_list:np.ndarray, image_shape:tuple):
@@ -19,7 +23,22 @@ class Find_instrintic:
                                                      None, None)
         if ret:
             self.__show_intrinsic_matrix_window(ins)
-            # QMessageBox.information(parent_widget, "Instrintic Matrix", "Intrinsic matrix(Camera matrix)\n" + str(ins))
+            self.intrinsic_matrix = ins
+            self.distortion_coefficients = dist
+            self.rvec = rvec
+            self.tvec = tvec
+
+    def get_intrinsic_matrix(self):
+        return self.intrinsic_matrix
+
+    def get_distortion_coefficients(self):
+        return self.distortion_coefficients
+    
+    def get_rvec(self):
+        return self.rvec
+
+    def get_tvec(self):
+        return self.tvec
 
     def __show_intrinsic_matrix_window(self, intrinsic_matrix:np.ndarray):
         dialog = QDialog()
