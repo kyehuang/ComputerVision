@@ -10,6 +10,7 @@ import os
 from Load_Image.load_image import Load_Image
 from Corner_Detection.find_corners import Find_Corners
 from Corner_Detection.find_instrinstic import Find_instrintic
+from Corner_Detection.find_extrinsic import Find_Extrinsic
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -18,6 +19,7 @@ class MainWindow(QWidget):
         self.load_image = Load_Image()
         self.find_corners = Find_Corners()
         self.find_instrintic = Find_instrintic()
+        self.find_extrinsic = Find_Extrinsic()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -77,26 +79,9 @@ class MainWindow(QWidget):
         find_intrinsic_btn.clicked.connect(self.handle_find_intrinsic)
         layout.addWidget(find_intrinsic_btn)
 
-        extrinsic_label = QLabel("1.3 Find extrinsic")
-        extrinsic_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed) 
-        layout.addWidget(extrinsic_label)
-
-        # 輸入數字框
-        self.spin_box = QSpinBox()
-        self.spin_box.setRange(1, 15)
-        self.spin_box.setValue(1)  # 设置初始值
-        self.spin_box.valueChanged.connect(self.handle_spin_value_change)
-
-        print_button = QPushButton("Print Value")
-        print_button.clicked.connect(self.print_spin_value)
-
-        layout.addWidget(self.spin_box)
-        layout.addWidget(print_button)
-
-
-        find_extrinsic_btn = QPushButton("1.3 Find extrinsic")
-        find_extrinsic_btn.clicked.connect(self.handle_find_extrinsic)
-        layout.addWidget(find_extrinsic_btn)
+        group_extrinsic = self.create_extrinsic_group()
+        group_extrinsic.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        layout.addWidget(group_extrinsic)
 
 
         find_distortion_btn = QPushButton("1.4 Find Distortion")
@@ -108,6 +93,26 @@ class MainWindow(QWidget):
         layout.addWidget(show_result_btn)
 
         # 设置分组框的布局
+        group.setLayout(layout)
+        return group
+
+    def create_extrinsic_group(self):
+        """外参矩阵的分组框"""
+        group = QGroupBox("1.3 Find Extrinsic")
+        layout = QVBoxLayout()
+
+        spin_box = QSpinBox()
+        spin_box.setRange(1, 15)
+        spin_box.setValue(1)
+        spin_box.valueChanged.connect(self.handle_spin_value_change)
+        layout.addWidget(spin_box)
+
+
+        find_extrinsic_btn = QPushButton("1.3 Find Extrinsic")
+        find_extrinsic_btn.clicked.connect(self.handle_find_extrinsic)
+        # find_extrinsic_btn.setFixedHeight(50)
+        layout.addWidget(find_extrinsic_btn)
+
         group.setLayout(layout)
         return group
 
@@ -190,10 +195,7 @@ class MainWindow(QWidget):
 
     def handle_find_extrinsic(self):
         """根据用户选择的索引，显示对应的外参矩阵"""
-        if self.rvecs is not None and self.tvecs is not None:
-            find_extrinsic_for_image(self.rvecs, self.tvecs, self.extrinsic_value)
-        else:
-            print("Please calculate intrinsic parameters first.")
+        self.find_extrinsic.find_extrinsic(self, self.find_instrintic.get_rvec(), self.find_instrintic.get_tvec(), self.extrinsic_value)
 
     def handle_find_distortion(self):
         """计算并显示畸变矩阵"""
