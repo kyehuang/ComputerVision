@@ -4,26 +4,15 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, 
     QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox
 )
-
 import os
 
-from Load_Image.load_image import Load_Image
-from Corner_Detection.find_corners import Find_Corners
-from Corner_Detection.find_instrinstic import Find_instrintic
-from Corner_Detection.find_extrinsic import Find_Extrinsic
-from Corner_Detection.find_distortion import Find_Distortion
-from Corner_Detection.show_result import Show_Result
+from Corner_Detection.Camera_Calibration import Camera_Calibration
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.load_image = Load_Image()
-        self.find_corners = Find_Corners()
-        self.find_instrintic = Find_instrintic()
-        self.find_extrinsic = Find_Extrinsic()
-        self.find_distortion = Find_Distortion()
-        self.show_result = Show_Result()
+        self.Camera_Calibration = Camera_Calibration()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -55,7 +44,7 @@ class MainWindow(QWidget):
         layout = QVBoxLayout()
 
         load_button = QPushButton("Load folder")
-        load_button.clicked.connect(lambda: self.load_image.load_folder(self))
+        load_button.clicked.connect(lambda: self.Camera_Calibration.load_folder(self))
         layout.addWidget(load_button)
 
         load_imgL_btn = QPushButton("Load Image_L")
@@ -186,8 +175,7 @@ class MainWindow(QWidget):
 
     def handle_find_intrinsic(self):
         """计算并存储内参和畸变矩阵"""
-        self.find_instrintic.find_intrinsic(self, self.find_corners.get_object_points_list(),
-                                            self.find_corners.get_corners_list(), self.find_corners.get_image_shape())
+        self.Camera_Calibration.find_intrinsic(self)
         # if self.intrinsic_matrix is not None and self.distortion is not None:
         #     print("Intrinsic matrix and distortion coefficients calculated successfully.")
         # else:
@@ -195,15 +183,14 @@ class MainWindow(QWidget):
 
     def handle_find_corner(self):
         """处理查找角点的逻辑"""
-        self.find_corners.find_corners(self, self.load_image.get_load_images_folder())
+        self.Camera_Calibration.find_corners(self)
 
     def handle_find_extrinsic(self):
         """根据用户选择的索引，显示对应的外参矩阵"""
-        self.find_extrinsic.find_extrinsic(self, self.find_instrintic.get_rvec(), self.find_instrintic.get_tvec(), self.extrinsic_value)
-
+        self.Camera_Calibration.find_extrinsic(self, self.extrinsic_value)
     def handle_find_distortion(self):
         """计算并显示畸变矩阵"""
-        self.find_distortion.find_distortion(self, self.find_instrintic)
+        self.Camera_Calibration.find_distortion(self)
     
     def handle_show_result(self):
         """处理显示取消畸变结果的逻辑"""
@@ -211,12 +198,8 @@ class MainWindow(QWidget):
             QMessageBox.warning(self, "Warning", "Please select a valid index.")
             return
 
-        if self.find_instrintic.get_intrinsic_matrix() is None:
-            QMessageBox.warning(self, "Warning", "No intrinsic matrix found.\n"
-                                + "Please find the intrinsic matrix first.")
-            return
         
-        self.show_result.show_result(self, self.find_corners.get_image(self.extrinsic_value), self.find_instrintic.get_intrinsic_matrix(), self.find_instrintic.get_distortion_coefficients())
+        self.Camera_Calibration.show_result(self, self.extrinsic_value)
 
 
     def load_and_save_image(self, save_path):
