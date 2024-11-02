@@ -11,6 +11,7 @@ from Load_Image.load_image import Load_Image
 from Corner_Detection.find_corners import Find_Corners
 from Corner_Detection.find_instrinstic import Find_instrintic
 from Corner_Detection.find_extrinsic import Find_Extrinsic
+from Corner_Detection.find_distortion import Find_Distortion
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -20,6 +21,7 @@ class MainWindow(QWidget):
         self.find_corners = Find_Corners()
         self.find_instrintic = Find_instrintic()
         self.find_extrinsic = Find_Extrinsic()
+        self.find_distortion = Find_Distortion()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -199,7 +201,7 @@ class MainWindow(QWidget):
 
     def handle_find_distortion(self):
         """计算并显示畸变矩阵"""
-        find_distortion_matrix(self.Q1_folder)
+        self.find_distortion.find_distortion(self, self.find_instrintic)
     
     def handle_show_result(self):
         """处理显示取消畸变结果的逻辑"""
