@@ -116,6 +116,7 @@ class Find_Corners:
         """
         try:
             image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.bmp', '.jpg', '.jpeg', '.png'))]
+            image_files.sort(key=lambda x: int(os.path.splitext(x)[0]))
             if not image_files:
                 raise ValueError("No valid image files found in the selected folder.")
             
