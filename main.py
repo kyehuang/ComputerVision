@@ -9,6 +9,7 @@ import os
 
 from Load_Image.load_image import Load_Image
 from Corner_Detection.find_corners import Find_Corners
+from Corner_Detection.find_instrinstic import Find_instrintic
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -16,6 +17,7 @@ class MainWindow(QWidget):
 
         self.load_image = Load_Image()
         self.find_corners = Find_Corners()
+        self.find_instrintic = Find_instrintic()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -175,11 +177,12 @@ class MainWindow(QWidget):
 
     def handle_find_intrinsic(self):
         """计算并存储内参和畸变矩阵"""
-        self.intrinsic_matrix, self.distortion, self.rvecs, self.tvecs = find_intrinsic_matrix(self.Q1_folder)
-        if self.intrinsic_matrix is not None and self.distortion is not None:
-            print("Intrinsic matrix and distortion coefficients calculated successfully.")
-        else:
-            print("Failed to calculate intrinsic matrix and distortion coefficients.")
+        self.find_instrintic.find_intrinsic(self, self.find_corners.get_object_points_list(),
+                                            self.find_corners.get_corners_list(), self.find_corners.get_image_shape())
+        # if self.intrinsic_matrix is not None and self.distortion is not None:
+        #     print("Intrinsic matrix and distortion coefficients calculated successfully.")
+        # else:
+        #     print("Failed to calculate intrinsic matrix and distortion coefficients.")
 
     def handle_find_corner(self):
         """处理查找角点的逻辑"""
