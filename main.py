@@ -12,6 +12,7 @@ from Corner_Detection.find_corners import Find_Corners
 from Corner_Detection.find_instrinstic import Find_instrintic
 from Corner_Detection.find_extrinsic import Find_Extrinsic
 from Corner_Detection.find_distortion import Find_Distortion
+from Corner_Detection.show_result import Show_Result
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -22,6 +23,7 @@ class MainWindow(QWidget):
         self.find_instrintic = Find_instrintic()
         self.find_extrinsic = Find_Extrinsic()
         self.find_distortion = Find_Distortion()
+        self.show_result = Show_Result()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -205,10 +207,16 @@ class MainWindow(QWidget):
     
     def handle_show_result(self):
         """处理显示取消畸变结果的逻辑"""
-        if hasattr(self, 'intrinsic_matrix') and hasattr(self, 'distortion'):
-            show_undistorted_result(self.Q1_folder, self.intrinsic_matrix, self.distortion)
-        else:
-            print("Please calculate intrinsic matrix and distortion coefficients first.")
+        if 1 > self.extrinsic_value or self.extrinsic_value > 15:
+            QMessageBox.warning(self, "Warning", "Please select a valid index.")
+            return
+
+        if self.find_instrintic.get_intrinsic_matrix() is None:
+            QMessageBox.warning(self, "Warning", "No intrinsic matrix found.\n"
+                                + "Please find the intrinsic matrix first.")
+            return
+        
+        self.show_result.show_result(self, self.find_corners.get_image(self.extrinsic_value), self.find_instrintic.get_intrinsic_matrix(), self.find_instrintic.get_distortion_coefficients())
 
 
     def load_and_save_image(self, save_path):

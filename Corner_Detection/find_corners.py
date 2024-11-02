@@ -16,6 +16,7 @@ class Find_Corners:
 
         self.object_points_list = []
         self.corners_list = []
+        self.image_list = []
         self.image_shape = None
         pass
 
@@ -49,6 +50,7 @@ class Find_Corners:
                 cv2.waitKey(0)
                 self.object_points_list.append(self.__init_object_points())
                 self.corners_list.append(corners)
+                self.image_list.append(image)
             else:
                 QMessageBox.warning(parent_widget, "Warning", "Failed to find the chess board corners.")
                 return
@@ -81,6 +83,15 @@ class Find_Corners:
         """
         return self.image_shape
 
+    def get_image(self, index:int):
+        """
+        Get the image list
+
+        Returns:
+            np.ndarray: The image list
+        """
+        return self.image_list[index]
+    
     def __find_corner(self, image):
         """
         Find the chess board corners
