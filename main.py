@@ -9,6 +9,7 @@ import os
 from Corner_Detection.Camera_Calibration import Camera_Calibration
 from Augmented_Reailty.Augmented_Reailty import Augmented_Reailty
 from Stereo_Disparity_Map.Stereo_Disparity_Map import Stereo_Disparity_Map
+from SIFT_Keypoints.SIFT_Keypoints import SIFT_Keypoints
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -17,6 +18,7 @@ class MainWindow(QWidget):
         self.Camera_Calibration = Camera_Calibration()
         self.Augmented_Reailty = Augmented_Reailty()
         self.Stereo_Disparity_Map = Stereo_Disparity_Map()
+        self.SIFT_Keypoints = SIFT_Keypoints(self)
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -153,20 +155,20 @@ class MainWindow(QWidget):
         layout = QVBoxLayout()
 
         load_img1_btn = QPushButton("Load Image1")
-        load_img1_btn.clicked.connect(lambda: self.load_and_save_image(self.img1_path))
+        load_img1_btn.clicked.connect(lambda: self.SIFT_Keypoints.load_image_1())
         layout.addWidget(load_img1_btn)
 
         load_img2_btn = QPushButton("Load Image2")
-        load_img2_btn.clicked.connect(lambda: self.load_and_save_image(self.img2_path))
+        load_img2_btn.clicked.connect(lambda: self.SIFT_Keypoints.load_image_2())
         layout.addWidget(load_img2_btn)
 
 
         keypoints_btn = QPushButton("4.1 Keypoints")
-        keypoints_btn.clicked.connect(lambda: sift_detect_keypoint(self.img1_path))
+        keypoints_btn.clicked.connect(lambda: self.SIFT_Keypoints.show_sift_detect_keypoint_on_image_1())
         layout.addWidget(keypoints_btn)
 
         matched_keypoints_btn = QPushButton("4.2 Matched Keypoints")
-        matched_keypoints_btn.clicked.connect(lambda: sift_match_keypoint(self.img1_path, self.img2_path))
+        matched_keypoints_btn.clicked.connect(lambda: self.SIFT_Keypoints.show_match_keypoint())
         layout.addWidget(matched_keypoints_btn)
 
         group.setLayout(layout)
