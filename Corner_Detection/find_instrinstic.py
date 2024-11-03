@@ -27,6 +27,18 @@ class Find_instrintic:
             self.distortion_coefficients = dist
             self.rvec = rvec
             self.tvec = tvec
+    
+    def find_intrinsic_with_window(self, object_points_list:np.ndarray, corners_list:np.ndarray, image_shape:tuple):
+        if object_points_list is None or corners_list is None or image_shape is None:
+            return
+        
+        ret, ins, dist, rvec, tvec = cv2.calibrateCamera(object_points_list, corners_list, image_shape,
+                                                     None, None)
+        if ret:
+            self.intrinsic_matrix = ins
+            self.distortion_coefficients = dist
+            self.rvec = rvec
+            self.tvec = tvec
 
     def get_intrinsic_matrix(self):
         return self.intrinsic_matrix

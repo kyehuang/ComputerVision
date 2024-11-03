@@ -5,6 +5,10 @@ from Corner_Detection.find_distortion import Find_Distortion
 from Corner_Detection.show_result import Show_Result
 from Load_Image.load_image import Load_Image
 
+from PyQt5.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
+    QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox, QDialog, QTextEdit
+)
 
 class Camera_Calibration:
     def __init__(self):
@@ -18,6 +22,9 @@ class Camera_Calibration:
 
     def load_folder(self, parent_widget):
         self.Load_Image.load_folder(parent_widget)
+        self.Find_Corners.find_corners_without_window(self.Load_Image.get_load_images_folder())
+        self.Find_instrintic.find_intrinsic_with_window(self.Find_Corners.get_object_points_list(),
+                                                        self.Find_Corners.get_corners_list(), self.Find_Corners.get_image_shape())
 
     def find_corners(self, parent_widget):
         self.Find_Corners.find_corners(parent_widget, self.Load_Image.get_load_images_folder())
@@ -39,3 +46,14 @@ class Camera_Calibration:
                                      self.Find_instrintic.get_distortion_coefficients(), 
                                      )
         
+    def get_image_information(self, parent_widget, index):
+        if self.Find_instrintic.get_intrinsic_matrix() is None:
+            QMessageBox.warning(parent_widget, "Warning", "No object points list, corners list.\n"
+                               + "Please load the images and find the corners first.")
+            return
+
+        image_information = self.Find_Corners.get_image(index), self.Find_instrintic.get_intrinsic_matrix(), self.Find_instrintic.get_distortion_coefficients(), self.Find_instrintic.get_rvec()[index], self.Find_instrintic.get_tvec()[index]
+        return image_information
+
+    def get_all_images(self):
+        return self.Find_Corners.get_all_images().copy()

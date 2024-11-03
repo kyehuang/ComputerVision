@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, 
     QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox
 )
+import copy
 
 class Find_Corners:
     def __init__(self,):
@@ -12,7 +13,7 @@ class Find_Corners:
         self.winSize = (11, 11)
         self.zeroZone = (-1, -1)
         self.criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-        self.square_size = 0.02
+        self.square_size = 1
 
         self.object_points_list = []
         self.corners_list = []
@@ -44,7 +45,7 @@ class Find_Corners:
         # Find the chess board corners
         for image in images:
             self.image_shape = image.shape[:2]
-            image_with_corners, corners = self.__find_corner(image)
+            image_with_corners, corners = self.__find_corner(image.copy())
             if image_with_corners is not None:
                 cv2.imshow("Chess Board Corners", image_with_corners)
                 cv2.waitKey(0)
@@ -55,6 +56,34 @@ class Find_Corners:
                 QMessageBox.warning(parent_widget, "Warning", "Failed to find the chess board corners.")
                 return
         cv2.destroyAllWindows()
+    
+    def find_corners_without_window(self, _load_images_folder):
+        """
+        Find the chess board corners without displaying the window
+
+        Parameters:
+            _load_images_folder: str
+                The folder path of the images to be loaded
+        """
+        # Get the folder path of the images to be loaded
+        if _load_images_folder is None:
+            return
+        images = self.__get_image_from_folder(_load_images_folder)
+        
+        # Get the images from the folder path
+        if images is None:
+            return
+        
+        # Find the chess board corners
+        for image in images:
+            self.image_shape = image.shape[:2]
+            image_with_corners, corners = self.__find_corner(image.copy())
+            if image_with_corners is not None:
+                self.object_points_list.append(self.__init_object_points())
+                self.corners_list.append(corners)
+                self.image_list.append(image)
+            else:
+                return
     
     def get_object_points_list(self):
         """
@@ -90,7 +119,10 @@ class Find_Corners:
         Returns:
             np.ndarray: The image list
         """
-        return self.image_list[index]
+        return self.image_list[index].copy()
+    
+    def get_all_images(self):
+        return copy.deepcopy(self.image_list)
     
     def __find_corner(self, image):
         """
