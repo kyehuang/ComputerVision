@@ -119,6 +119,8 @@ class Find_Corners:
         Returns:
             np.ndarray: The image list
         """
+        if len(self.image_list) == 0:
+            return None
         return self.image_list[index].copy()
     
     def get_all_images(self):

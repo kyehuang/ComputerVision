@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (
     QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox, QDialog, QTextEdit
 )
 
-from Corner_Detection.Camera_Calibration import Camera_Calibration
+from src.Corner_Detection.Camera_Calibration import Camera_Calibration
 
 class Show_Words_On_Chessboard:
     def __init__(self, alphabet_db_onboard_path=None, offset=None):
@@ -29,8 +29,15 @@ class Show_Words_On_Chessboard:
             QMessageBox.warning(parent_widget, "Warning", "length of text must less than 6")
             return 
         
+        if len(text) == 0:
+            QMessageBox.warning(parent_widget, "Warning", "input text")
+            return
+        
         text = text.upper()          
         all_images = Camera_Calibration.get_all_images()
+        if len(all_images) == 0:
+            QMessageBox.warning(parent_widget, "Warning", "No image.\n"
+                               + "Please load the images and find the corners first.")
 
         for image_index in range(len(all_images)):
             NewCharPoints_list = self.__calculate_NewCharPoints_list(text, parent_widget, image_index, Camera_Calibration)

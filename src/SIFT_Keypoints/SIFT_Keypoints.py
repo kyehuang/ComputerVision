@@ -1,4 +1,4 @@
-from Load_Image.load_image import Load_Image
+from src.Load_Image.load_image import Load_Image
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, 
     QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox
@@ -50,7 +50,7 @@ class SIFT_Keypoints:
             return None, None
 
     def show_match_keypoint(self):
-        if self._load_image_1 is None and self._load_image_2 is None:
+        if self._load_image_1 is None or self._load_image_2 is None:
             QMessageBox.warning(self.parent_widget, "Warning", "Please load image first.")
             return 
         

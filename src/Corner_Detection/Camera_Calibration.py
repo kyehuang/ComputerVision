@@ -1,9 +1,9 @@
-from Corner_Detection.find_corners import Find_Corners
-from Corner_Detection.find_instrinstic import Find_instrintic
-from Corner_Detection.find_extrinsic import Find_Extrinsic
-from Corner_Detection.find_distortion import Find_Distortion
-from Corner_Detection.show_result import Show_Result
-from Load_Image.load_image import Load_Image
+from src.Corner_Detection.find_corners import Find_Corners
+from src.Corner_Detection.find_instrinstic import Find_instrintic
+from src.Corner_Detection.find_extrinsic import Find_Extrinsic
+from src.Corner_Detection.find_distortion import Find_Distortion
+from src.Corner_Detection.show_result import Show_Result
+from src.Load_Image.load_image import Load_Image
 
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,

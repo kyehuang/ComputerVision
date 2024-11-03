@@ -1,4 +1,4 @@
-from Load_Image.load_image import Load_Image
+from src.Load_Image.load_image import Load_Image
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
     QGroupBox, QGridLayout, QLineEdit, QSpinBox, QSizePolicy, QFileDialog, QMessageBox, QDialog, QTextEdit

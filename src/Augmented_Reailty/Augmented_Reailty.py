@@ -1,5 +1,5 @@
-from Augmented_Reailty.show_words_on_chessboard import Show_Words_On_Chessboard
-from Corner_Detection.Camera_Calibration import Camera_Calibration
+from src.Augmented_Reailty.show_words_on_chessboard import Show_Words_On_Chessboard
+from src.Corner_Detection.Camera_Calibration import Camera_Calibration
 import os
 
 class Augmented_Reailty:

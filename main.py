@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import (
 )
 import os
 
-from Corner_Detection.Camera_Calibration import Camera_Calibration
-from Augmented_Reailty.Augmented_Reailty import Augmented_Reailty
-from Stereo_Disparity_Map.Stereo_Disparity_Map import Stereo_Disparity_Map
-from SIFT_Keypoints.SIFT_Keypoints import SIFT_Keypoints
+from src.Corner_Detection.Camera_Calibration import Camera_Calibration
+from src.Augmented_Reailty.Augmented_Reailty import Augmented_Reailty
+from src.Stereo_Disparity_Map.Stereo_Disparity_Map import Stereo_Disparity_Map
+from src.SIFT_Keypoints.SIFT_Keypoints import SIFT_Keypoints
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -20,11 +20,7 @@ class MainWindow(QWidget):
         self.Stereo_Disparity_Map = Stereo_Disparity_Map()
         self.SIFT_Keypoints = SIFT_Keypoints(self)
 
-        self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
-        self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
-        self.imR_path = os.path.join(os.getcwd(), "Q3_image/imR.png")
-        self.img1_path = os.path.join(os.getcwd(), "Q4_image/img1.png")
-        self.img2_path = os.path.join(os.getcwd(), "Q4_image/img2.png")
+        # set var
         self.extrinsic_value = 1
         self.text_input = ""
 
@@ -173,27 +169,14 @@ class MainWindow(QWidget):
 
         group.setLayout(layout)
         return group
-    
-    def handle_load_folder(self, target_folder):
-        """处理加载文件夹按钮的点击事件"""
-        load_and_save_images(self, target_folder)
 
     def handle_spin_value_change(self, value):
         """当 SpinBox 的值发生变化时更新存储的值"""
         self.extrinsic_value = value
 
-    def print_spin_value(self):
-        """打印当前存储的 SpinBox 的值"""
-        print(f"Current SpinBox Value: {self.extrinsic_value}")
-
-
     def handle_find_intrinsic(self):
         """计算并存储内参和畸变矩阵"""
         self.Camera_Calibration.find_intrinsic(self)
-        # if self.intrinsic_matrix is not None and self.distortion is not None:
-        #     print("Intrinsic matrix and distortion coefficients calculated successfully.")
-        # else:
-        #     print("Failed to calculate intrinsic matrix and distortion coefficients.")
 
     def handle_find_corner(self):
         """处理查找角点的逻辑"""
@@ -224,9 +207,6 @@ class MainWindow(QWidget):
 
     def handle_show_words_vertical(self):
         self.Augmented_Reailty.show_words_vertical(self, self.text_input, self.Camera_Calibration)
-
-
-
 
     def handle_stereo_disparity(self):
         """计算并显示 Stereo Disparity Map"""
