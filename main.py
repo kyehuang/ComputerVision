@@ -8,6 +8,7 @@ import os
 
 from Corner_Detection.Camera_Calibration import Camera_Calibration
 from Augmented_Reailty.Augmented_Reailty import Augmented_Reailty
+from Stereo_Disparity_Map.Stereo_Disparity_Map import Stereo_Disparity_Map
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -15,6 +16,7 @@ class MainWindow(QWidget):
 
         self.Camera_Calibration = Camera_Calibration()
         self.Augmented_Reailty = Augmented_Reailty()
+        self.Stereo_Disparity_Map = Stereo_Disparity_Map()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -51,11 +53,11 @@ class MainWindow(QWidget):
         layout.addWidget(load_button)
 
         load_imgL_btn = QPushButton("Load Image_L")
-        load_imgL_btn.clicked.connect(lambda: self.load_and_save_image(self.imL_path))
+        load_imgL_btn.clicked.connect(lambda: self.Stereo_Disparity_Map.load_imageL(self))
         layout.addWidget(load_imgL_btn)
 
         load_imgR_btn = QPushButton("Load Image_R")
-        load_imgR_btn.clicked.connect(lambda: self.load_and_save_image(self.imR_path))
+        load_imgR_btn.clicked.connect(lambda: self.Stereo_Disparity_Map.load_imageR(self))
         layout.addWidget(load_imgR_btn)
 
         group.setLayout(layout)
@@ -221,35 +223,12 @@ class MainWindow(QWidget):
     def handle_show_words_vertical(self):
         self.Augmented_Reailty.show_words_vertical(self, self.text_input, self.Camera_Calibration)
 
-    def load_and_save_image(self, save_path):
-        """选择图像并保存到指定路径"""
-        try:
-            # 创建目标文件夹（如果不存在）
-            os.makedirs(os.path.dirname(save_path), exist_ok=True)
-
-            # 打开文件选择对话框
-            file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.bmp)")
-            if file_path:
-                # 复制文件到指定路径
-                print(f"Copying {file_path} to {save_path}")
-                shutil.copy(file_path, save_path)
-
-                # 显示成功信息
-                QMessageBox.information(self, "Success", f"Saved image to {save_path}!")
-            else:
-                QMessageBox.warning(self, "Warning", "No image selected.")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to save image:\n{str(e)}")
 
 
 
     def handle_stereo_disparity(self):
         """计算并显示 Stereo Disparity Map"""
-        if self.imL_path and self.imR_path:
-            print(f"Computing Disparity Map for: \nLeft Image: {self.imL_path}\nRight Image: {self.imR_path}")
-            compute_stereo_disparity_map(self.imL_path, self.imR_path)
-        else:
-            print("Please select both left and right images.")
+        self.Stereo_Disparity_Map.show_stereo_disparity_map_window(self)
 
 
 if __name__ == '__main__':
