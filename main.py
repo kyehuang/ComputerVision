@@ -7,12 +7,14 @@ from PyQt5.QtWidgets import (
 import os
 
 from Corner_Detection.Camera_Calibration import Camera_Calibration
+from Augmented_Reailty.Augmented_Reailty import Augmented_Reailty
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.Camera_Calibration = Camera_Calibration()
+        self.Augmented_Reailty = Augmented_Reailty()
 
         self.Q3_folder = os.path.join(os.getcwd(), "Q3_image")
         self.imL_path = os.path.join(os.getcwd(), "Q3_image/imL.png")
@@ -20,6 +22,7 @@ class MainWindow(QWidget):
         self.img1_path = os.path.join(os.getcwd(), "Q4_image/img1.png")
         self.img2_path = os.path.join(os.getcwd(), "Q4_image/img2.png")
         self.extrinsic_value = 1
+        self.text_input = ""
 
         # 设置窗口标题和大小
         self.setWindowTitle('MainWindow - cvdlhw1.ui')
@@ -116,9 +119,16 @@ class MainWindow(QWidget):
 
         text_input = QLineEdit()
         text_input.setPlaceholderText("Type Here")  # 占位符
+        text_input.textChanged.connect(lambda: self.handle_text_input_change(text_input.text()))
         layout.addWidget(text_input)
-        layout.addWidget(QPushButton("2.1 show words on board"))
-        layout.addWidget(QPushButton("2.2 show words vertical"))
+
+        show_words_on_board_btn = QPushButton("2.1 show words on board")
+        show_words_on_board_btn.clicked.connect(lambda: self.handle_show_words_on_board())
+        layout.addWidget(show_words_on_board_btn)
+
+        show_words_on_board_btn = QPushButton("2.2 show words vertical")
+        show_words_on_board_btn.clicked.connect(lambda: self.handle_show_words_vertical())
+        layout.addWidget(show_words_on_board_btn)
 
         group.setLayout(layout)
         return group
@@ -201,6 +211,15 @@ class MainWindow(QWidget):
         
         self.Camera_Calibration.show_result(self, self.extrinsic_value)
 
+    def handle_text_input_change(self, text):
+        """处理文本输入框的文本变化"""
+        self.text_input = text
+
+    def handle_show_words_on_board(self):
+        self.Augmented_Reailty.show_words_on_board(self, self.text_input, self.Camera_Calibration)
+
+    def handle_show_words_vertical(self):
+        self.Augmented_Reailty.show_words_vertical(self, self.text_input, self.Camera_Calibration)
 
     def load_and_save_image(self, save_path):
         """选择图像并保存到指定路径"""
